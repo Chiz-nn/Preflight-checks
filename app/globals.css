@@ -1,52 +1,119 @@
 @import "tailwindcss";
 
 :root {
-  --paper: #f5f3ee;
-  --panel: #ffffff;
-  --ink: #16191d;
-  --muted: #5f646b;
-  --line: #e2ded5;
-  --go: #1d7a4b;
-  --go-bg: #e6f3ec;
-  --watch: #a65f00;
-  --watch-bg: #fdf1dc;
-  --rebook: #b42318;
-  --rebook-bg: #fdecea;
-  --info: #4a5563;
-  --info-bg: #eef0f3;
+  --ink: #0e1a2b;
+  --ink-2: #44526a;
+  --ink-3: #7b879b;
+  --page: #f3f6fa;
+  --surface: #ffffff;
+  --line: #dde4ee;
+  --sky-1: #16264a;
+  --sky-2: #3d63b8;
+  --sky-3: #a9c6ee;
+  --focus: #3d63b8;
+  --go: #13805b;
+  --go-soft: #e3f4ec;
+  --watch: #c27800;
+  --watch-soft: #fdf2dd;
+  --rebook: #d13a30;
+  --rebook-soft: #fde9e7;
+  --info: #5b6b84;
+  --info-soft: #edf1f7;
 }
 
 @theme inline {
-  --color-paper: var(--paper);
-  --color-panel: var(--panel);
   --color-ink: var(--ink);
-  --color-muted: var(--muted);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-page: var(--page);
+  --color-surface: var(--surface);
   --color-line: var(--line);
+  --color-sky-1: var(--sky-1);
+  --color-sky-2: var(--sky-2);
+  --color-sky-3: var(--sky-3);
   --color-go: var(--go);
-  --color-go-bg: var(--go-bg);
+  --color-go-soft: var(--go-soft);
   --color-watch: var(--watch);
-  --color-watch-bg: var(--watch-bg);
+  --color-watch-soft: var(--watch-soft);
   --color-rebook: var(--rebook);
-  --color-rebook-bg: var(--rebook-bg);
+  --color-rebook-soft: var(--rebook-soft);
   --color-info: var(--info);
-  --color-info-bg: var(--info-bg);
-  --font-sans: ui-sans-serif, -apple-system, "Segoe UI", Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: ui-monospace, "SF Mono", Menlo, "JetBrains Mono", Consolas, monospace;
+  --color-info-soft: var(--info-soft);
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
+html {
+  -webkit-font-smoothing: antialiased;
+}
 body {
-  background: var(--paper);
+  background: var(--page);
   color: var(--ink);
   font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv11";
 }
-
-:target {
-  outline: 2px solid var(--ink);
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+:focus-visible {
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
+  border-radius: 6px;
 }
 
-@keyframes pulse-bar {
-  0%, 100% { opacity: 0.35; }
-  50% { opacity: 1; }
+/* Sky band: a slow drifting gradient, the page's one ambient motion. */
+.sky {
+  background:
+    radial-gradient(60% 90% at 15% 0%, rgba(169, 198, 238, 0.55), transparent 60%),
+    radial-gradient(50% 80% at 85% 10%, rgba(61, 99, 184, 0.9), transparent 70%),
+    linear-gradient(160deg, var(--sky-1) 0%, #21386e 45%, var(--sky-2) 100%);
+  background-size: 140% 140%, 140% 140%, 100% 100%;
+  animation: drift 24s ease-in-out infinite alternate;
 }
-.loading-bar { animation: pulse-bar 1.4s ease-in-out infinite; }
+.sky-go { --sky-2: #2e78a6; }
+.sky-watch { --sky-2: #6a5c9e; }
+.sky-rebook { --sky-2: #7d3a5c; }
+@keyframes drift {
+  from { background-position: 0% 0%, 100% 0%, 0 0; }
+  to { background-position: 30% 20%, 70% 30%, 0 0; }
+}
+
+/* Responses to data arriving */
+@keyframes settle {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: none; }
+}
+.settle { animation: settle 360ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+.rise { animation: rise 600ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+
+@keyframes shimmer {
+  from { background-position: -200px 0; }
+  to { background-position: 200px 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, var(--line) 0%, #eef2f8 50%, var(--line) 100%);
+  background-size: 400px 100%;
+  animation: shimmer 1.2s linear infinite;
+}
+
+/* Route arc */
+.arc-path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: draw 1.4s cubic-bezier(0.65, 0, 0.35, 1) 0.2s forwards;
+}
+@keyframes draw { to { stroke-dashoffset: 0; } }
+.node-pop { animation: settle 400ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+
+[data-flash="true"] {
+  box-shadow: 0 0 0 2px var(--focus), 0 12px 30px -12px rgba(14, 26, 43, 0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sky, .settle, .rise, .shimmer, .node-pop { animation: none !important; }
+  .arc-path { animation: none; stroke-dashoffset: 0; }
+}

@@ -6,7 +6,7 @@ import { AIRPORTS } from "@/lib/airports";
 import { addDays, todayIn, WINDOWS } from "@/lib/time";
 import type { TimeWindow } from "@/lib/types";
 
-const field = "w-full rounded border border-line bg-panel px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ink/20";
+const field = "w-full rounded-xl border border-line bg-page/60 px-3 py-2.5 text-sm text-ink transition focus:border-sky-2 focus:bg-surface focus:outline-none focus:ring-4 focus:ring-sky-2/15";
 
 function AirportSelect({ value, onChange, placeholder, optional }: { value: string; onChange: (v: string) => void; placeholder: string; optional?: boolean }) {
   return (
@@ -14,7 +14,7 @@ function AirportSelect({ value, onChange, placeholder, optional }: { value: stri
       <option value="">{placeholder}</option>
       {AIRPORTS.map((a) => (
         <option key={a.code} value={a.code}>
-          {a.city.split(",")[0]} ({a.code}) · {a.name}
+          {a.city.split(",")[0]} ({a.code}), {a.name}
         </option>
       ))}
     </select>
@@ -43,30 +43,30 @@ export default function TripForm() {
   }
 
   return (
-    <form onSubmit={submit} className="rounded-lg border border-line bg-panel p-5 space-y-4">
+    <form onSubmit={submit} className="space-y-4 rounded-2xl bg-surface p-6 shadow-[0_20px_50px_-30px_rgba(14,26,43,0.35)] ring-1 ring-line">
       <div>
-        <h2 className="font-semibold">Check a trip</h2>
-        <p className="text-sm text-muted">Any U.S. route on the list, any date. Live data covers the next 7 days.</p>
+        <h2 className="text-lg font-semibold tracking-tight">Check any trip</h2>
+        <p className="mt-1 text-sm text-ink-3">Live forecasts cover the next 7 days. Further out, the call rests on route history.</p>
       </div>
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="space-y-1">
-          <span className="text-xs font-medium text-muted uppercase tracking-wide">From</span>
+          <span className="text-sm font-medium text-ink-2">From</span>
           <AirportSelect value={origin} onChange={setOrigin} placeholder="Origin airport" />
         </label>
         <label className="space-y-1">
-          <span className="text-xs font-medium text-muted uppercase tracking-wide">To</span>
+          <span className="text-sm font-medium text-ink-2">To</span>
           <AirportSelect value={dest} onChange={setDest} placeholder="Destination airport" />
         </label>
         <label className="space-y-1 sm:col-span-2">
-          <span className="text-xs font-medium text-muted uppercase tracking-wide">Connecting through (optional)</span>
+          <span className="text-sm font-medium text-ink-2">Connecting through</span>
           <AirportSelect value={via} onChange={setVia} placeholder="Nonstop" optional />
         </label>
         <label className="space-y-1">
-          <span className="text-xs font-medium text-muted uppercase tracking-wide">Date</span>
+          <span className="text-sm font-medium text-ink-2">Date</span>
           <input type="date" className={field} value={date} min={today} max={addDays(today, 120)} onChange={(e) => setDate(e.target.value)} required />
         </label>
         <label className="space-y-1">
-          <span className="text-xs font-medium text-muted uppercase tracking-wide">Departure window</span>
+          <span className="text-sm font-medium text-ink-2">Departure window</span>
           <select className={field} value={window} onChange={(e) => setWindow(e.target.value as TimeWindow)}>
             {Object.entries(WINDOWS).map(([k, w]) => (
               <option key={k} value={k}>
@@ -76,13 +76,13 @@ export default function TripForm() {
           </select>
         </label>
         <label className="space-y-1 sm:col-span-2">
-          <span className="text-xs font-medium text-muted uppercase tracking-wide">Traveler (optional)</span>
-          <input className={field} value={traveler} onChange={(e) => setTraveler(e.target.value)} placeholder="Name, for the report header" />
+          <span className="text-sm font-medium text-ink-2">Traveler</span>
+          <input className={field} value={traveler} onChange={(e) => setTraveler(e.target.value)} placeholder="Shown on the report" />
         </label>
       </div>
-      {error && <p className="text-sm text-rebook">{error}</p>}
-      <button type="submit" className="w-full rounded bg-ink px-4 py-2.5 text-sm font-medium text-paper hover:bg-ink/90">
-        Run preflight check
+      {error && <p className="text-sm text-rebook" role="alert">{error}</p>}
+      <button type="submit" className="w-full rounded-xl bg-ink px-4 py-3 text-sm font-semibold text-white shadow-[0_8px_20px_-8px_rgba(14,26,43,0.6)] transition hover:-translate-y-px hover:bg-sky-1 active:translate-y-0">
+        Run the check
       </button>
     </form>
   );
