@@ -33,7 +33,7 @@ export async function GET() {
       const key = process.env.GEMINI_API_KEY;
       if (!key) throw new Error("GEMINI_API_KEY not set");
       // Same fallback order the app uses: report the first model that answers.
-      const models = (process.env.GEMINI_MODEL ?? "gemini-flash-latest,gemini-2.5-flash,gemini-flash-lite-latest").split(",").map((m) => m.trim());
+      const models = (process.env.GEMINI_MODEL ?? "gemini-flash-latest,gemini-flash-lite-latest").split(",").map((m) => m.trim());
       const errors: string[] = [];
       for (const model of models) {
         const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {

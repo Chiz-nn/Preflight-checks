@@ -11,7 +11,7 @@ import type { Assessment, Explanation } from "./types";
  * template-based explanation is used so the demo never breaks.
  */
 
-const MODELS = (process.env.GEMINI_MODEL ?? "gemini-flash-latest,gemini-2.5-flash,gemini-flash-lite-latest")
+const MODELS = (process.env.GEMINI_MODEL ?? "gemini-flash-latest,gemini-flash-lite-latest")
   .split(",")
   .map((m) => m.trim())
   .filter(Boolean);
