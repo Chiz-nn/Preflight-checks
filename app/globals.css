@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+:root {
+  --paper: #f5f3ee;
+  --panel: #ffffff;
+  --ink: #16191d;
+  --muted: #5f646b;
+  --line: #e2ded5;
+  --go: #1d7a4b;
+  --go-bg: #e6f3ec;
+  --watch: #a65f00;
+  --watch-bg: #fdf1dc;
+  --rebook: #b42318;
+  --rebook-bg: #fdecea;
+  --info: #4a5563;
+  --info-bg: #eef0f3;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-panel: var(--panel);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-go: var(--go);
+  --color-go-bg: var(--go-bg);
+  --color-watch: var(--watch);
+  --color-watch-bg: var(--watch-bg);
+  --color-rebook: var(--rebook);
+  --color-rebook-bg: var(--rebook-bg);
+  --color-info: var(--info);
+  --color-info-bg: var(--info-bg);
+  --font-sans: ui-sans-serif, -apple-system, "Segoe UI", Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, "JetBrains Mono", Consolas, monospace;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+
+:target {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+@keyframes pulse-bar {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+.loading-bar { animation: pulse-bar 1.4s ease-in-out infinite; }
