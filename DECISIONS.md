@@ -77,5 +77,5 @@ The roster skips the AI call (`explain=0`). Ten trips times one LLM call each wo
 4. **Push, don't pull.** Run checks on a schedule and alert the coordinator when a trip changes from Go to Watch, instead of waiting for someone to open the page.
 5. **Validate the rules against outcomes.** Log every verdict, then compare it to what actually happened (BTS publishes it a couple of months later). That tells me whether "Watch" trips really get disrupted more often, and lets me tune thresholds with evidence instead of judgment.
 6. **Shared cache.** The in-memory cache resets on every deploy and isn't shared between server instances. Redis or similar.
-7. **Tests around the rules.** The rules engine is pure enough to unit test with recorded API responses. That's the first thing I'd add.
+7. **More tests, from real incidents.** There are 19 tests today (`npm test`) covering every verdict rule, the confidence levels, and the AI guardrails, run against a fake network and a frozen clock. Next I'd record real API responses during actual disruptions (a ground stop, a winter storm) and replay them as fixtures, and run the suite in CI on every change.
 8. **Driving.** Road weather and closures for trips under ~300 miles.

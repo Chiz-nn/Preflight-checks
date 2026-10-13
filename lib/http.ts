@@ -49,3 +49,8 @@ export function errorMessage(e: unknown): string {
   }
   return String(e);
 }
+
+/** Drop every cached response. Used by tests so one case's data can't leak into the next. */
+export function clearCache(): void {
+  cache.clear();
+}

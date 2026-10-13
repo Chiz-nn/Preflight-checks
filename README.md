@@ -116,6 +116,20 @@ python3 scripts/build_baseline.py --months 10,11,12  # just these months, a few 
 
 The script downloads monthly BTS on-time files, keeps routes between the airports in `data/airports.json`, and counts flights, disrupted flights, and cancellations per route and month. Downloads are cached in `.bts-cache/` (git-ignored).
 
+## Tests
+
+```bash
+npm test
+```
+
+19 tests, about 2 seconds, fully offline. They run the real rules engine against a fake network that serves each API's response shape, with the clock frozen, so results never depend on today's weather.
+
+- **FAA:** ground stop today means Rebook and points to a clear nearby airport; a long ground delay program tomorrow is only Watch; a short one today is Watch; closures that only restrict general aviation are ignored.
+- **Forecasts and alerts:** storms inside the departure window mean Watch, the same storms outside it don't; a slight chance (under 30%) is context only; a winter storm warning means Rebook; a heat advisory doesn't count; storms at the connecting hub suggest a different hub.
+- **Confidence:** low past 7 days with no live calls made; high for tomorrow when every source answers; drops a level when one source fails; drops to medium when the TAF and NWS forecast disagree.
+- **AI guardrails:** rule-based fallback with no key; the headline keeps the rules' verdict; made-up citations are dropped; tries the next model, then falls back when every model fails.
+- **Input:** rejects unknown airports, same-airport routes, and past dates.
+
 ## API
 
 | Endpoint | What it does |
@@ -150,6 +164,10 @@ data/
   roster.ts              seeded travelers
 scripts/
   build_baseline.py      BTS download and aggregation
+tests/
+  helpers.ts             fake network and frozen clock
+  assess.test.ts         verdict, confidence, and action rules
+  explain.test.ts        AI guardrails and fallback
 ```
 
 ## Tech
