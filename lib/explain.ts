@@ -117,7 +117,9 @@ export async function explain(a: Assessment): Promise<Explanation> {
       const out = await callGemini(model, prompt, key);
       // Guardrails: keep the verdict word honest and drop citations to evidence that doesn't exist.
       const verdictWord = { go: "Go", watch: "Watch", rebook: "Rebook" }[a.verdict];
-      const headline = out.headline.toLowerCase().startsWith(verdictWord.toLowerCase()) ? out.headline : `${verdictWord}: ${out.headline}`;
+      const headline = out.headline.toLowerCase().startsWith(verdictWord.toLowerCase())
+        ? verdictWord + out.headline.slice(verdictWord.length)
+        : `${verdictWord}: ${out.headline}`;
       const actions = out.actions
         .filter((x) => x && typeof x.text === "string")
         .slice(0, 4)
